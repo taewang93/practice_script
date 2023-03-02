@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lotto</title>
+  <style>
+    .ball{
+      display:inline-flex;
+      align-items: center;
+      justify-content:center;
+      width:30px;
+      height:30px;
+      margin-right:10px;
+      border:1px solid #000;
+      border-radius:30px;
+      font-size:20px;
+    }
+  </style>
+</head>
+<body>
+  <div id="result">
+    추첨번호: 
+  </div>
+  <div id="result_bonus">
+    보너스번호: 
+  </div>
+
+  <script>
+    const $result = document.querySelector('#result');
+    const $resultBonus = document.querySelector('#result_bonus');
+
+    const numbers = [];
+    for(let i = 0; i < 45; i++){
+      numbers.push(i + 1);
+    }
+    
+    const shuffled = [];
+    while(numbers.length > 0){
+      let random = Math.floor(Math.random() * numbers.length);
+      let randomNumber = numbers.splice(random, 1)
+      shuffled.push(randomNumber[0]);
+    }
+
+    const result = shuffled.slice(0, 6);
+    result.sort((a, b) => a - b);
+    const resultBonus = shuffled.slice(6, 7);
+
+    const paintColor = (number, $ball) => {
+      if(number <= 8){
+        $ball.style.backgroundColor = 'red';
+      } 
+      if( number > 8){
+        $ball.style.backgroundColor = 'orange';
+      }
+      if(number > 16){
+        $ball.style.backgroundColor = 'yellow';
+      }
+      if(number > 24){
+        $ball.style.backgroundColor = 'green';
+      }
+      if(number > 32){
+        $ball.style.backgroundColor = 'blue';
+      }
+      if(number > 40){
+        $ball.style.backgroundColor = 'purple';
+      }
+    }
+    const drawBall = (number, $target) => {
+      const $ball = document.createElement('div');
+      $ball.className = 'ball';
+      $ball.textContent = number;
+      paintColor(number, $ball);
+      $target.append($ball);
+    }
+    
+    for(let i = 0; i < result.length; i++){
+      setTimeout(() => {
+        drawBall(result[i], $result)
+      }, (i + 1) * 1000);
+    }
+    
+    setTimeout(() => {
+      drawBall(resultBonus, $resultBonus)
+    }, 7000)
+    
+    
+  </script>
+</body>
+</html>

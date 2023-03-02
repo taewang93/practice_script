@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Word relay</title>
+</head>
+<body>
+  <div>
+    <span id="order">1</span>번째 참가자
+  </div>
+  <div>
+    제시어: <span id="word"></span>
+  </div>
+  <input type="text">
+  <button>Click!</button>
+
+  <script>
+    const $order = document.querySelector('#order');
+    const $word = document.querySelector('#word');
+    const $input = document.querySelector('input');
+    const $button = document.querySelector('button');
+    const number = parseInt(prompt('참가인원', 10));
+    let word;
+    let newWord;
+    
+    const onClick = () => {
+      newWord = $input.value;
+      if(!word || (word && word[word.length - 1] == newWord[0])){
+        $word.textContent = newWord;
+        word = newWord;
+
+        if(parseInt($order.textContent) == number){
+          $order.textContent = 1;
+        } else{
+          $order.textContent++
+        }
+      } else{
+        alert('false');
+      }
+      $input.value = '';
+      $input.focus();
+    }
+
+    $button.addEventListener('click', onClick);
+  </script>
+
+</body>
+</html>

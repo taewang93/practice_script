@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculator</title>
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
+    body{
+      padding:30px;
+    }
+    div{
+      margin-bottom:10px;
+      display: flex;
+    }
+    span{
+      display:inline-flex;
+      justify-content:center;
+      align-items:center;
+      width:50px;
+      height:50px;
+      margin-right:10px;
+      font-size:20px;
+      border:1px solid #666;
+      cursor:pointer;
+    }
+    #result{
+      display:inline-flex;
+      justify-content: right;
+      align-items:center;
+      padding-right:20px;
+      width:230px;
+      border:1px solid #999;
+      color:#999;
+      min-height:40px;
+    }
+  </style>
+</head>
+<body>
+  <div>
+    <span id="number1">1</span>
+    <span id="number2">2</span>
+    <span id="number3">3</span>
+    <span id="plus">+</span>
+  </div>
+  <div>
+    <span id="number4">4</span>
+    <span id="number5">5</span>
+    <span id="number6">6</span>
+    <span id="minus">-</span>
+  </div>
+  <div>
+    <span id="number7">7</span>
+    <span id="number8">8</span>
+    <span id="number9">9</span>
+    <span id="multiply">*</span>
+  </div>
+  <div>
+    <span id="cancel">C</span>
+    <span id="number0">0</span>
+    <span id="equals">=</span>
+    <span id="division">/</span>
+  </div>
+  <div>
+    <p id="result"></p>
+  </div>
+
+  <script>
+    let inputNumber = '';
+    let operator = '';
+    let prevOperator = '';
+    let result = '';
+    let doEqual = false;
+
+    const $result = document.querySelector('#result');
+    const $calculating = document.querySelector('#calculating');
+
+    /*** 고차함수
+    const onClickNumber = (number) => {
+      return () => {
+        console.log(number);
+      }
+    }
+    document.querySelector('#number1').addEventListener('click', onClickNumber('1'));
+    */
+
+    const onClickNumber = (event) => {
+      let targetNumber = event.target.textContent;
+      inputNumber += targetNumber;
+      $result.textContent = inputNumber;
+      // if(doEqual){
+      //   alert('input operator');
+      // }
+    }
+    const onClickOperator = (event) => {
+      let targetOperator = event.target.textContent;
+      if(!inputNumber){
+        if(result){
+          $result.textContent = targetOperator
+          if(targetOperator){
+            prevOperator = targetOperator;
+          }
+        } else{
+          if(targetOperator == '-'){
+            inputNumber = '-';
+            $result.textContent = '-';
+          } else{
+            alert('No first number');
+          }
+        }
+        return;
+      }
+      if(result){
+        switch(prevOperator){
+          case '+':
+            result = parseInt(result) + parseInt(inputNumber);
+            break;
+          case '-':
+            result = parseInt(result) - parseInt(inputNumber);
+            break;
+          case '*':
+            result = parseInt(result) * parseInt(inputNumber);
+            break;
+          case '/':
+            result = parseInt(result) / parseInt(inputNumber);
+            break;
+        }
+        inputNumber = '';
+        $result.textContent = result;
+        prevOperator = targetOperator;
+      } else{
+        result = inputNumber;
+        inputNumber = '';
+        prevOperator = targetOperator;
+        $result.textContent = targetOperator;
+      }
+      doEqual  = false;
+    }
+
+    for(let i = 0; i < 10; i++){
+      document.querySelector('#number' + i).addEventListener('click', onClickNumber);
+    }
+    document.querySelector('#plus').addEventListener('click', onClickOperator);
+    document.querySelector('#minus').addEventListener('click', onClickOperator);
+    document.querySelector('#multiply').addEventListener('click', onClickOperator);
+    document.querySelector('#division').addEventListener('click', onClickOperator);
+    document.querySelector('#cancel').addEventListener('click', () => {
+      $result.textContent = '';
+      inputNumber = '';
+      operator = '';
+      prevOperator = '';
+      result = '';
+    });
+    document.querySelector('#equals').addEventListener('click', () => {
+      switch(prevOperator){
+        case '+':
+          result = parseInt(result) + parseInt(inputNumber);
+          break;
+        case '-':
+          result = parseInt(result) - parseInt(inputNumber);
+          break;
+        case '*':
+          result = parseInt(result) * parseInt(inputNumber);
+          break;
+        case '/':
+          result = parseInt(result) / parseInt(inputNumber);
+          break;
+      }
+      inputNumber = '';
+      prevOperator = '';
+      $result.textContent = result;
+      doEqual = true;
+    });
+  </script>
+</body>
+</html>

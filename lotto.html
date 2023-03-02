@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lotto</title>
+  <style>
+    .ball{
+      display:inline-flex;
+      margin-right:10px;
+      width:20px;
+      height:20px;
+      border:1px solid #000;
+      font-size:14px;
+      align-items:center;
+      justify-content:center;
+      border-radius:100px;
+    }
+  </style>
+</head>
+<body>
+  <div>
+    <span>추첨번호</span>
+    <div id="number" class="number_wrap"></div>
+  </div>
+  <div>
+    <span>보너스 번호</span>
+    <div id="bonus_number" class="number_wrap"></div>
+  </div>
+
+  <script>
+    // 1부터 45까지 배열만들기
+    const candidate = Array(45).fill().map((v, i) => i + 1);
+
+    shuffle = [];
+    while(candidate.length > 0){
+      const random = Math.floor(Math.random() * candidate.length);
+      const spliceArray = candidate.splice(random, 1);
+      const value = spliceArray[0];
+      shuffle.push(value);
+    }
+
+    const winBalls = shuffle.slice(0, 6).sort((a, b) => a - b);
+    const bonus = shuffle[6];
+    
+    const $number = document.querySelector('#number');
+    const $bonus = document.querySelector('#bonus_number');
+
+    const showBalls = (number, $target) => {
+      const $ball = document.createElement('div');
+      $ball.className = 'ball';
+      $ball.textContent = number;
+      $target.append($ball);
+    }
+
+    for(let i = 0; i < 6; i++){
+      setTimeout(() =>  {
+        showBalls(winBalls[i], $number)
+      }, (i + 1) * 1000);
+    }
+    setTimeout(() =>  {
+      showBalls(bonus, $bonus)
+    }, 7000);
+  </script>
+</body>
+</html>

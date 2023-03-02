@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Check response</title>
+  <style>
+    #screen{
+      width: 300px;;
+      height: 200px;;
+      text-align: center;
+      user-select: none;
+    }
+    #screen.waiting{
+      background-color: aqua;
+    }
+    #screen.ready{
+      background-color: red;
+      color: #fff;
+    }
+    #screen.now{
+      background-color: greenyellow;
+    }
+    .text_wrap{
+      display: flex;
+    }
+    .text_wrap div{
+      flex-grow: 1;
+    }
+  </style>
+</head>
+<body>
+  <div id="screen" class="waiting">
+    <p id="text">클릭해서 시작하세요</p>
+  </div>
+  <div class="text_wrap">
+    <div id="result"></div>
+    <div id="average"></div>
+    <div id="ranking"></div>
+  </div>
+
+  <script>
+    $screen = document.querySelector('#screen');
+    $text = document.querySelector('#text');
+    $result = document.querySelector('#result');
+    $average = document.querySelector('#average');
+    $ranking = document.querySelector('#ranking');
+
+    let startTime;
+    let endTime;
+    let timeoutId;
+    let count = 0;
+    const records = [];
+
+    $screen.addEventListener('click', (event) => {
+      if( event.target.classList.contains('waiting') ){
+        $screen.classList.replace('waiting', 'ready');
+        $text.textContent = '준비해주세요';
+        timeoutId = setTimeout(function(){
+          $screen.classList.replace('ready', 'now');
+          $text.textContent = '클릭해주세요';
+          startTime = new Date();
+        }, Math.floor(Math.random() * 1000) + 1000);
+      } else if( event.target.classList.contains('ready') ) {
+        clearTimeout(timeoutId);
+        $text.textContent = '화면이 바뀌기전에 클릭';
+        setTimeout(function(){
+          $screen.classList.replace('ready', 'waiting');
+          $text.textContent = '클릭해서 시작하세요';
+        }, 1000);
+      } else if( event.target.classList.contains('now') ) {
+        count++
+        endTime = new Date();
+        const speed = endTime - startTime;
+        records.push(speed);
+        let average = records.reduce((a, c) => a + c) / records.length;
+        let ranking = records.sort((a, b) => a - b);
+        $ranking.textContent = '';
+        for(let i = 0; i < ranking.length; i++){
+          $ranking.append(`${ranking[i]}`, document.createElement('br'));
+        }
+        $result.append(`${count}차 시도 ${speed}ms`, document.createElement('br'));
+        $average.textContent = `평균: ${average}ms`;
+        $screen.classList.replace('now', 'waiting');
+        $text.textContent = '클릭해서 시작하세요';
+      }
+    });
+  </script>
+</body>
+</html>

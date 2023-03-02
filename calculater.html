@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculator</title>
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
+    body{
+      padding:30px;
+    }
+    div{
+      margin-bottom:10px;
+      display: flex;
+    }
+    span{
+      display:inline-flex;
+      justify-content:center;
+      align-items:center;
+      width:50px;
+      height:50px;
+      margin-right:10px;
+      font-size:20px;
+      border:1px solid #666;
+      cursor:pointer;
+    }
+    .big_span{
+      width:110px;
+    }
+    #result{
+      display:inline-flex;
+      justify-content: right;
+      align-items:center;
+      padding-right:20px;
+      width:230px;
+      border:1px solid #999;
+      color:#999;
+      min-height:40px;
+    }
+  </style>
+</head>
+<body>
+  <div>
+    <span id="number1">1</span>
+    <span id="number2">2</span>
+    <span id="number3">3</span>
+    <span id="plus">+</span>
+  </div>
+  <div>
+    <span id="number4">4</span>
+    <span id="number5">5</span>
+    <span id="number6">6</span>
+    <span id="minus">-</span>
+  </div>
+  <div>
+    <span id="number7">7</span>
+    <span id="number8">8</span>
+    <span id="number9">9</span>
+    <span id="multiply">*</span>
+  </div>
+  <div>
+    <span id="number0" class="big_span">0</span>
+    <span id="equals">=</span>
+    <span id="division">/</span>
+  </div>
+  <div>
+    <p id="result"></p>
+  </div>
+  <script>
+    const $number1 = document.querySelector('#number1');
+    const $number2 = document.querySelector('#number2');
+    const $number3 = document.querySelector('#number3');
+    const $number4 = document.querySelector('#number4');
+    const $number5 = document.querySelector('#number5');
+    const $number6 = document.querySelector('#number6');
+    const $number7 = document.querySelector('#number7');
+    const $number8 = document.querySelector('#number8');
+    const $number9 = document.querySelector('#number9');
+    const $number0 = document.querySelector('#number0');
+    const $plus = document.querySelector('#plus');
+    const $minus = document.querySelector('#minus');
+    const $multiply = document.querySelector('#multiply');
+    const $division = document.querySelector('#division');
+    const $equals = document.querySelector('#equals');
+    const $result = document.querySelector('#result');
+
+    let firstNumber = '';
+    let operator = '';
+    let secondNumber = '';
+
+    const onClickNumber = (event) => {
+      let targetText = event.target.textContent;
+      if(!operator){
+        firstNumber += targetText;
+        $result.textContent = firstNumber;
+      } else{
+        secondNumber += targetText;
+        $result.textContent = secondNumber;
+      }
+    } 
+    // 함수 안에 함수 고차함수(high order function)
+    const onClickNumberHigh = (number) => () => {
+      if(!operator){
+        firstNumber += number;
+        $result.textContent = firstNumber;
+      } else{
+        secondNumber += number;
+        $result.textContent = secondNumber;
+      }
+    }
+    
+    const onClickOperator = (event) => {
+      let targetText = event.target.textContent;
+      if(!secondNumber){
+        if(firstNumber){
+          operator = targetText;
+          $result.textContent = targetText;
+        } else{
+          alert('input number')
+        }
+      } else{
+        alert('no');
+      }
+    }
+
+    $number1.addEventListener('click', onClickNumber);
+    $number2.addEventListener('click', onClickNumber);
+    $number3.addEventListener('click', onClickNumber);
+    $number4.addEventListener('click', onClickNumber);
+    $number5.addEventListener('click', onClickNumber);
+    $number6.addEventListener('click', onClickNumber);
+    $number7.addEventListener('click', onClickNumber);
+    $number8.addEventListener('click', onClickNumber);
+    $number9.addEventListener('click', onClickNumber);
+    $number0.addEventListener('click', onClickNumberHigh('0'));
+    //$number0.addEventListener('click', () => {onClickNumber('0')});
+    $plus.addEventListener('click', onClickOperator);
+    $minus.addEventListener('click', onClickOperator);
+    $multiply.addEventListener('click', onClickOperator);
+    $division.addEventListener('click', onClickOperator);
+    $equals.addEventListener('click', () => {
+      if(secondNumber){
+        switch(operator) {
+          case '+':
+            $result.textContent = parseInt(firstNumber) + parseInt(secondNumber);
+            break;
+          case '-':
+            $result.textContent = parseInt(firstNumber) - parseInt(secondNumber);
+            break;
+          case '*':
+            $result.textContent = parseInt(firstNumber) * parseInt(secondNumber);
+            break;
+          case '/':
+            $result.textContent = parseInt(firstNumber) / parseInt(secondNumber);
+            break;
+        }
+      } else{
+        alert('nono');
+      }
+    });
+  </script>
+</body>
+</html>
