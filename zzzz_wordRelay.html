@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Word relay</title>
+</head>
+<body>
+  <div id="first_step">
+    <form action="" id="first_form">
+      <p>참여인원</p>
+      <input type="text" id="first_input">
+    </form>
+  </div>
+  <div id="second_step" style="display:none;">
+    <div>
+      <span id="order">1</span>번째 참가자
+    </div>
+    <div>
+      제시어: <span id="word"></span>
+    </div>
+    <input type="text" id="input">
+    <button id="button">Click</button>
+  </div>
+
+  <script>
+    const $firstStep = document.querySelector('#first_step');
+    const $firstForm = document.querySelector('#first_form');
+    const $firstInput = document.querySelector('#first_input');
+    const $secondStep = document.querySelector('#second_step');
+    const $order = document.querySelector('#order');
+    const $word = document.querySelector('#word');
+    const $input = document.querySelector('#input');
+    const $button = document.querySelector('#button');
+
+    let joinLength;
+    let word;
+    let preWord;
+    let count = 1;
+
+    $firstForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      joinLength = e.target['first_input'].value;
+      $firstStep.style.display = 'none';
+      $secondStep.style.display = 'block';
+    });
+
+    $button.addEventListener('click', () => {
+      word = $input.value;
+      if(!preWord){
+        preWord = word
+        $word.textContent = word;
+        count++
+        $order.textContent = count;
+        return;
+      }
+      if(preWord[preWord.length -1] !== word[0]) {
+        console.log('It`s wrong');
+        return;
+      }
+      preWord = word
+      $word.textContent = word;
+      if(count == joinLength){
+        count = 1;
+        $order.textContent = count;
+      } else{
+        count++
+        $order.textContent = count;
+      }
+    });
+  </script>
+</body>
+</html>

@@ -18,6 +18,16 @@
   </style>
 </head>
 <body>
+  <div>
+    <button>click</button>
+  </div>
+
+  <script>
+    document.querySelector('div').addEventListener('click', () => {
+      console.log('aa');
+    });
+  </script>
+
   <script>
     const $table = document.createElement('table');
 
@@ -25,12 +35,20 @@
 
     for(i = 0; i < 5; i++){
       const $tr = document.createElement('tr');
-      row.push($tr);
-      $table.append($tr);
+      const cells = [];
       for(let j = 0; j < 4; j++){
         const $td = document.createElement('td');
+        cells.push($td);
+        $tr.append($td);
       }
+      row.push(cells);
+      $table.append($tr);
     }
+
+    document.body.append($table);
   </script>
+
+
+
 </body>
 </html>

@@ -28,16 +28,6 @@
     let checkedLength = 0;
     
     const checkWinner = (target) => {
-      // let rowIndex;
-      // let cellIndex;
-      // rows.forEach((row, ri) => {
-      //   row.forEach((cell, ci) => {
-      //     if(cell === target){
-      //       rowIndex = ri;
-      //       cellIndex = ci;
-      //     }
-      //   });
-      // });
       const rowIndex = target.parentNode.rowIndex;
       const cellIndex = target.cellIndex;
 
@@ -50,7 +40,6 @@
         rows[rowIndex][2].textContent === turn
       ) {
         hasWinner = true;
-        console.log('over');
       }
       if(
         rows[0][cellIndex].textContent === turn &&
@@ -58,7 +47,6 @@
         rows[2][cellIndex].textContent === turn
       ) {
         hasWinner = true;
-        console.log('over');
       }
       if(
         rows[0][0].textContent === turn &&
@@ -77,45 +65,43 @@
       return hasWinner;
     }
 
+    const checkWinnerAndDraw = (target) => {
+      const hasWinner = checkWinner(target);
+        if(hasWinner) {
+          $result.textContent = `${turn}  승리`;
+          $table.removeEventListener('click', callback);
+          return;
+        }
+        if(rows.flat().every((td) => td.textContent)){
+          $result.textContent = '무승부';
+          return;
+        }
+        turn = turn === 'O' ? 'X' : 'O';
+    }
+
+    let clickable = true;
     const callback = (event) => {
+      if(!clickable) {
+        return;
+      }
       if(event.target.textContent) {
         alert('사용된칸 입니다');
         return;
       }
       event.target.textContent = turn;
 
-      if(checkWinner(event.target)){
-        $result.textContent = `${turn} 승리`;
-        $table.removeEventListener('click', callback);
-        return;
-      }
-      // checkedLength++
-      // if(checkedLength == 9){
-      //   $result.textContent = '무승부';
-      //   return;
-      // }
-      // let draw = true;
-      // rows.forEach((row) => {
-      //   row.forEach((cell) => {
-      //     if(!cell.textContent) { //cell이 비어있을때
-      //       draw = false;
-      //     }
-      //   });
-      // });
-      // if(draw) {
-      //   $result.textContent = '무승부';
-      //   return;
-      // }
+      checkWinnerAndDraw(event.target);
 
-      // 2차원배열 1차원배열로 flat    rows.flat();
-      // every 모두다 some 하나라도
-      if(rows.flat().every((td) => td.textContent)){
-        $result.textContent = '무승부';
-        return;
+      if(turn === 'X') {
+        clickable = false;
+        setTimeout(() => {
+          const emptyCells = rows.flat().filter((v) => !v.textContent);
+          const randomCell = emptyCells[Math.floor(Math.random() * emptyCells.length)];
+          randomCell.textContent = 'X';
+          checkWinnerAndDraw(randomCell);
+          clickable = true;
+        }, 1000);
       }
-
-      turn = turn === 'O' ? 'X' : 'O';
-      //event.stopPropagtion(); 에빈트 버블링막기
     }
 
     for(let i = 0; i < 3; i++){

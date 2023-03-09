@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tictactoe</title>
+  <title>ttt</title>
   <style>
     table{
       border-collapse: collapse;
@@ -19,14 +19,27 @@
 </head>
 <body>
   
+
   <script>
     const $table = document.createElement('table');
     const $result = document.createElement('div');
     const rows = [];
 
     let turn = 'O';
-    let checkedLength = 0;
-    
+
+    // 테이블 만들기
+    for(let i = 0; i < 3; i++){
+      $tr = document.createElement('tr');
+      cells = [];
+      for(let j = 0; j < 3; j++){
+        $td = document.createElement('td');
+        $tr.append($td);
+        cells.push($td);
+      }
+      rows.push(cells);
+      $table.append($tr);
+    }
+
     const checkWinner = (target) => {
       // let rowIndex;
       // let cellIndex;
@@ -41,9 +54,8 @@
       const rowIndex = target.parentNode.rowIndex;
       const cellIndex = target.cellIndex;
 
-
       let hasWinner = false;
-
+      
       if(
         rows[rowIndex][0].textContent === turn && 
         rows[rowIndex][1].textContent === turn && 
@@ -77,59 +89,47 @@
       return hasWinner;
     }
 
-    const callback = (event) => {
-      if(event.target.textContent) {
-        alert('사용된칸 입니다');
+    const callBack = (event) => {
+      // 이미 사용된칸 클릭
+      if (event.target.textContent !== '') {
+        $result.textContent = '사용된칸 입니다';
         return;
       }
       event.target.textContent = turn;
-
-      if(checkWinner(event.target)){
-        $result.textContent = `${turn} 승리`;
-        $table.removeEventListener('click', callback);
-        return;
+      if (turn === 'O') {
+        turn = 'X'
+      } else if (turn === 'X') {
+        turn = 'O'
       }
-      // checkedLength++
-      // if(checkedLength == 9){
-      //   $result.textContent = '무승부';
-      //   return;
-      // }
-      // let draw = true;
-      // rows.forEach((row) => {
-      //   row.forEach((cell) => {
-      //     if(!cell.textContent) { //cell이 비어있을때
-      //       draw = false;
-      //     }
-      //   });
-      // });
-      // if(draw) {
-      //   $result.textContent = '무승부';
-      //   return;
-      // }
 
-      // 2차원배열 1차원배열로 flat    rows.flat();
-      // every 모두다 some 하나라도
+      // 무승부
       if(rows.flat().every((td) => td.textContent)){
         $result.textContent = '무승부';
         return;
       }
+      // let draw = true;
+      // rows.forEach((row) => {
+      //   row.forEach((cell) => {
+      //     if(!cell.textContent){
+      //       draw = false;
+      //     }
+      //   });
+      // });
+      // if(draw){
+      //   $result.textContent = '무승부';
+      //   return;
+      // }
 
-      turn = turn === 'O' ? 'X' : 'O';
-      //event.stopPropagtion(); 에빈트 버블링막기
-    }
+      checkWinner(event.target);
 
-    for(let i = 0; i < 3; i++){
-      const $tr = document.createElement('tr');
-      const cells = [];
-      for(let j = 0; j < 3; j++){
-        const $td = document.createElement('td');
-        cells.push($td);
-        $tr.append($td);
+      // 승리조건
+      if( checkWinner(event.target) ){
+        $result.textContent = `${turn} 승리`;
       }
-      rows.push(cells);
-      $table.append($tr);
     }
-    $table.addEventListener('click', callback);
+
+    $table.addEventListener('click', callBack);
+
     document.body.append($table);
     document.body.append($result);
   </script>

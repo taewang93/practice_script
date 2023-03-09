@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Text rpg</title>
+</head>
+<body>
+  <form id="start-screen">
+    <input type="text" id="name-input" placeholder="주인공 이름 입력">
+    <button id="start">start</button>
+  </form>
+  <div id="screen">
+    <div id="hero-stat">
+      <span id="hero-name"></span>
+      <span id="hero-level"></span>
+      <span id="hero-hp"></span>
+      <span id="hero-xp"></span>
+      <span id="hero-att"></span>
+    </div>
+    <form id="game-menu" style="display:none;">
+      <div id="menu-1">1. 모험</div>
+      <div id="menu-2">2. 휴식</div>
+      <div id="menu-3">3. 종료</div>
+      <input type="text" id="menu-input">
+      <button id="menu-button">click</button>
+    </form>
+    <form id="battle-menu" style="display:none;">
+      <div id="battle-1">1. 공격</div>
+      <div id="battle-2">2. 회복</div>
+      <div id="battle-3">3. 도망</div>
+      <input type="text" id="battle-input">
+      <button id="battle-button">click</button>
+      <div id="message"></div>
+      <div id="monster-stat">
+        <span id="monster-name"></span>
+        <span id="monster-hp"></span>
+        <span id="monster-att"></span>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    const $startScreen = document.querySelector('#start-screen');
+    const $gameMenu = document.querySelector('#game-menu');
+    const $battleMenu = document.querySelector('#battle-menu');
+    const $heroName = document.querySelector('#hero-name');
+    const $heroLevel = document.querySelector('#hero-level');
+    const $heroHp = document.querySelector('#hero-hp');
+    const $heroXp = document.querySelector('#hero-xp');
+    const $heroAtt = document.querySelector('#hero-att');
+    const $monsterStat = document.querySelector('#monster-stat');
+    const $monsterName = document.querySelector('#monster-name');
+    const $monsterHp = document.querySelector('#monster-hp');
+    const $monsterAtt = document.querySelector('#monster-att');
+    const $message = document.querySelector('#message');
+
+    const hero = {
+      name: '',
+      lev: 1,
+      maxHp: 100,
+      hp: 100,
+      xp: 0,
+      att: 10,
+      attack(target) {
+        target.hp -= this.att;
+      }
+    };
+    let monster = null;
+    const monsterList = [
+      {name: 'aaa', hp: 25, att: 10, xp: 10},
+      {name: 'bbb', hp: 50, att: 15, xp: 20},
+      {name: 'ccc', hp: 100, att: 20, xp: 30},
+    ]
+
+    $startScreen.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const name = event.target['name-input'].value;
+      $startScreen.style.display = 'none';
+      $gameMenu.style.display = 'block';
+      $heroName.textContent = name;
+      $heroLevel.textContent = `level: ${hero.lev}`;
+      $heroHp.textContent = `HP: ${hero.hp} / ${hero.maxHp}`;
+      $heroXp.textContent = `XP: ${hero.xp} / ${hero.lev * 15}`;
+      $heroAtt.textContent = `ATT: ${hero.att}`;
+    });
+    $gameMenu.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const input = event.target['menu-input'].value;
+      if(input === '1'){
+        $gameMenu.style.display = 'none';
+        $battleMenu.style.display = 'block';
+        const random = Math.floor(Math.random() * monsterList.length);
+        monster = JSON.parse(JSON.stringify(monsterList[random]));
+        monster.maxHp = monster.hp;
+        $message.textContent = `${monster.name}을 만남`;
+        $monsterStat.textContent = `${monster.name} HP: ${monster.hp} / ${monster.maxHp} ATT: ${monster.att}`;
+      }
+    });
+    $battleMenu.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const input = event.target['battle-input'].value;
+      if(input === '1'){
+        hero.attack(monster);
+        console.log(monster);
+        console.log(monster.hp);
+      }
+    });
+  </script>
+
+</body>
+</html>
